@@ -155,14 +155,17 @@ namespace bitmap {
 						data_[w24 + 0] = begin[2][wh];
 					}
 				}
+			} else if (img.size() == 1 && bitcount == 24) {
+				if (begin[0] == NULL) {
+					throw new std::exception("bitmap_image::bitmap_image ERROR: bitmap data address nums error");
+				}
+				memcpy(const_cast<unsigned char*>(&data_[0]), begin[0], width * 3 * height);
+
 			} else if (img.size() == 1 && bitcount == 8) {
 				if (begin[0] == NULL) {
 					throw new std::exception("bitmap_image::bitmap_image ERROR: bitmap data address nums error");
 				}
-				for (int h = 0; h < height; h++) {
-					unsigned char* row = const_cast<unsigned char*>(&data_[(h * width)]);
-					memcpy(row, begin[0] + h * width, width);
-				}
+				memcpy(const_cast<unsigned char*>(&data_[0]), begin[0], width* height);
 			} else {
 				throw new std::exception("bitmap_image::bitmap_image ERROR: bitmap data address nums error");
 			}
@@ -188,7 +191,7 @@ namespace bitmap {
 			bih.size = bih.struct_size();
 			bih.x_pels_per_meter = 0;
 			bih.y_pels_per_meter = 0;
-			bih.size_image = ((((bih.width * bih.bit_count) + 31) & ~31) >> 3) * bih.height;
+			bih.size_image = ((((bih.width * bih.bit_count) + 31) & ~31) >> 3)* bih.height;
 
 			bitmap_file_header bfh;
 
